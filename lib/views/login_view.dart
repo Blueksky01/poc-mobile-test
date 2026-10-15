@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mypoc1/views/render_list_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -46,7 +47,15 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed:() {},
+              onPressed:() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context)
+                    => const RenderListView()
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 // กำหนด ขนาดปุ่ม ความกว้าง 200 และความสูง 60 (หน่วยเป็นพิกเซล)
                 fixedSize: const Size(200, 60),
