@@ -1,0 +1,186 @@
+# ============================================================
+# Flutter Mobile - .gitignore
+# ============================================================
+
+# ----------------------------
+# OS / Miscellaneous
+# ----------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+*.class
+*.log
+*.pyc
+*.swp
+*.swo
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+
+.atom/
+.history/
+.svn/
+.build/
+.buildlog/
+migrate_working_dir/
+
+# ----------------------------
+# IDE: IntelliJ / Android Studio
+# ----------------------------
+*.iml
+*.ipr
+*.iws
+.idea/
+atlassian-ide-plugin.xml
+
+# ----------------------------
+# VS Code
+# ----------------------------
+# Ignore workspace settings by default.
+# Uncomment if your team wants to commit VS Code settings.
+# .vscode/
+
+# Common personal VS Code files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ----------------------------
+# Flutter / Dart / Pub
+# ----------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+.pub-cache/
+.pub-cache-*/
+build/
+coverage/
+doc/api/
+
+# Generated Flutter plugin registrants
+# Keep source files tracked; ignore generated build artifacts.
+**/generated_plugin_registrant.dart
+
+# Flutter generated version / build metadata
+**/flutter_export_environment.sh
+**/ios/Flutter/.last_build_id
+
+# ----------------------------
+# Test / Coverage / Reports
+# ----------------------------
+*.lcov
+*.info
+test-results/
+junit.xml
+report.xml
+
+# ----------------------------
+# Debug / Profile / Release artifacts
+# ----------------------------
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+# ----------------------------
+# Android / Gradle
+# ----------------------------
+**/.gradle/
+.gradle/
+**/local.properties
+**/captures/
+**/outputs/
+**/intermediates/
+**/lint-results*.html
+**/lint-results*.xml
+**/hs_err_pid*
+**/replay_pid*
+
+# Signing keys and credentials
+*.jks
+*.keystore
+key.properties
+/android/key.properties
+
+# ----------------------------
+# iOS / Xcode
+# ----------------------------
+**/DerivedData/
+**/Pods/
+**/.symlinks/
+**/Flutter/ephemeral/
+**/Flutter/Generated.xcconfig
+**/Flutter/flutter_export_environment.sh
+**/Runner/GeneratedPluginRegistrant.*
+
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app/
+*.framework/
+*.xcarchive/
+*.xcresult/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# Xcode user-specific project settings
+**/xcuserdata/
+
+# ----------------------------
+# Symbols / Obfuscation
+# ----------------------------
+app.*.symbols
+app.*.map.json
+*.symbols
+*.map.json
+
+# ----------------------------
+# Environment / Secrets
+# ----------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+
+secrets/
+credentials/
+*.pem
+*.p12
+*.mobileprovision
+*.provisionprofile
+
+# ----------------------------
+# Local databases / Temporary files
+# ----------------------------
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.lock.tmp
+
+# ----------------------------
+# Flutter Widget Preview
+# ----------------------------
+.widget_preview/
+
+# ----------------------------
+# Misc. generated files
+# ----------------------------
+*.freezed.dart.tmp
+*.g.dart.tmp
+*.gr.dart.tmp
