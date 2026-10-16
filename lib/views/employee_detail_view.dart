@@ -23,7 +23,7 @@ class EmployeeDetailView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Profile Header Card
+            // การ์ดส่วนหัวข้อมูลโปรไฟล์
             Card(
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -62,7 +62,7 @@ class EmployeeDetailView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Work Details Card
+            // การ์ดข้อมูลการทำงานและการติดต่อ
             Card(
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -107,7 +107,7 @@ class EmployeeDetailView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Address Details Card
+            // การ์ดข้อมูลที่อยู่
             Card(
               elevation: 0,
               shape: RoundedRectangleBorder(

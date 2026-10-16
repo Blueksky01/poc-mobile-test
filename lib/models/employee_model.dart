@@ -19,7 +19,7 @@ class EmployeeModel {
     required this.address,
   });
 
-  /// Factory constructor to map raw JSON to typed EmployeeModel
+  /// Factory constructor สำหรับแปลง JSON ให้อยู่ในรูปแบบ EmployeeModel ที่มี type ชัดเจน
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
     return EmployeeModel(
       id: (json['id'] as String?)?.trim() ?? '',
@@ -33,7 +33,7 @@ class EmployeeModel {
     );
   }
 
-  /// Serialize EmployeeModel to JSON map
+  /// แปลง EmployeeModel เป็น Map เพื่อนำไปแปลงเป็น JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -45,26 +45,26 @@ class EmployeeModel {
     };
   }
 
-  /// First character of employee name for Avatar display
+  /// ตัวอักษรตัวแรกของชื่อพนักงานสำหรับแสดงผลใน Avatar
   String get nameInitial {
     final trimmed = name.trim();
     if (trimmed.isEmpty) return '?';
-    // Get first visible grapheme/character
+    // ดึงตัวอักษรตัวแรกที่มองเห็น (รองรับภาษาไทย)
     return trimmed.characters.first;
   }
 
-  /// Consistent theme color based on department name
+  /// สีธีมประจำแผนกตามชื่อแผนก
   Color get departmentThemeColor {
     final dept = department.toLowerCase();
-    if (dept.contains('engine')) return const Color(0xFF1565C0); // Blue
-    if (dept.contains('human') || dept.contains('hr')) return const Color(0xFF6A1B9A); // Purple
-    if (dept.contains('finan')) return const Color(0xFF2E7D32); // Green
-    if (dept.contains('market')) return const Color(0xFFC2185B); // Pink
-    if (dept.contains('sale')) return const Color(0xFFEF6C00); // Orange
-    if (dept.contains('support')) return const Color(0xFF00838F); // Teal
-    if (dept.contains('design')) return const Color(0xFF7B1FA2); // Deep Purple
-    if (dept.contains('product')) return const Color(0xFFD84315); // Deep Orange
-    if (dept.contains('operat')) return const Color(0xFF455A64); // Blue Grey
+    if (dept.contains('engine')) return const Color(0xFF1565C0); // สีน้ำเงิน
+    if (dept.contains('human') || dept.contains('hr')) return const Color(0xFF6A1B9A); // สีม่วง
+    if (dept.contains('finan')) return const Color(0xFF2E7D32); // สีเขียว
+    if (dept.contains('market')) return const Color(0xFFC2185B); // สีชมพู
+    if (dept.contains('sale')) return const Color(0xFFEF6C00); // สีส้ม
+    if (dept.contains('support')) return const Color(0xFF00838F); // สีเขียวน้ำทะเล
+    if (dept.contains('design')) return const Color(0xFF7B1FA2); // สีม่วงเข้ม
+    if (dept.contains('product')) return const Color(0xFFD84315); // สีส้มเข้ม
+    if (dept.contains('operat')) return const Color(0xFF455A64); // สีเทาอมฟ้า
     return const Color(0xFF424242);
   }
 }

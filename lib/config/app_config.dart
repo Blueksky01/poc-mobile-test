@@ -6,7 +6,7 @@ class AppConfig {
   static const String defaultLocalUrl = 'http://localhost:3000';
   static const String defaultAndroidUrl = 'http://10.0.2.2:3000';
 
-  /// Initialize environment configuration
+  /// โหลดการตั้งค่าสภาพแวดล้อม (Environment configuration)
   static Future<void> initialize({String fileName = '.env'}) async {
     try {
       await dotenv.load(fileName: fileName, isOptional: true);
@@ -15,7 +15,7 @@ class AppConfig {
     }
   }
 
-  /// Get base URL dynamically based on environment and platform
+  /// ดึง Base URL แบบไดนามิกตามสภาพแวดล้อมและแพลตฟอร์มที่ใช้งาน
   static String get baseUrl {
     if (dotenv.isInitialized) {
       if (kIsWeb) {
@@ -36,7 +36,7 @@ class AppConfig {
           defaultLocalUrl;
     }
 
-    // Fallback if dotenv is not initialized
+    // ค่าเริ่มต้นสำรองกรณีที่ dotenv ยังไม่ได้ถูกโหลด
     if (kIsWeb) return defaultLocalUrl;
     if (Platform.isAndroid) return defaultAndroidUrl;
     return defaultLocalUrl;

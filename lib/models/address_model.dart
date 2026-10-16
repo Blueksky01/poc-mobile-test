@@ -13,7 +13,7 @@ class AddressModel {
     required this.postalCode,
   });
 
-  /// Factory constructor to deserialize JSON into AddressModel with safe fallbacks
+  /// Factory constructor สำหรับแปลง JSON เป็น AddressModel พร้อมกำหนดค่าเริ่มต้นที่ปลอดภัยหากไม่มีข้อมูล
   factory AddressModel.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return const AddressModel(
@@ -34,7 +34,7 @@ class AddressModel {
     );
   }
 
-  /// Serialize AddressModel to Map
+  /// แปลง AddressModel เป็น Map เพื่อนำไปแปลงเป็น JSON
   Map<String, dynamic> toJson() {
     return {
       'street': street,
@@ -45,7 +45,7 @@ class AddressModel {
     };
   }
 
-  /// Helper getter for formatted full address in Thai layout
+  /// Helper getter สำหรับจัดรูปแบบที่อยู่แบบเต็มตามรูปแบบภาษาไทย
   String get formattedAddress {
     final parts = <String>[];
     if (street != '-' && street.isNotEmpty) parts.add(street);
@@ -57,7 +57,7 @@ class AddressModel {
     return parts.isEmpty ? 'ไม่ระบุที่อยู่' : parts.join(' ');
   }
 
-  /// Short summary for compact card view (e.g., "คลองเตย, กรุงเทพมหานคร")
+  /// ที่อยู่แบบย่อสำหรับการแสดงผลในการ์ด (เช่น "คลองเตย, กรุงเทพมหานคร")
   String get shortAddress {
     if (district != '-' && province != '-') {
       return '$district, $province $postalCode';

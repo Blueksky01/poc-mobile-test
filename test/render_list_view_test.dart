@@ -60,28 +60,28 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // Verify controller has 10 items for Page 1
+    // ตรวจสอบว่า controller มี 10 รายการสำหรับหน้าที่ 1
     expect(employeeController.employees.length, 10);
     expect(employeeController.currentPage, 1);
     expect(employeeController.employees.first.name, 'พนักงานคนที่ 1');
     expect(employeeController.employees.last.name, 'พนักงานคนที่ 10');
 
-    // Verify PaginationBar is rendered
+    // ตรวจสอบว่า PaginationBar แสดงผลแล้ว
     expect(find.byType(PaginationBar), findsOneWidget);
     expect(find.text('แสดง 1 - 10 จาก 25 รายการ (หน้า 1 จาก 3)'), findsOneWidget);
 
-    // Tap page 2
+    // กดเลือกหน้าที่ 2
     await tester.tap(find.text('2'));
     await tester.pumpAndSettle();
 
-    // Verify Page 2 displays 10 items (items 11-20)
+    // ตรวจสอบว่าหน้าที่ 2 แสดงผล 10 รายการ (รายการที่ 11-20)
     expect(employeeController.currentPage, 2);
     expect(employeeController.employees.length, 10);
     expect(employeeController.employees.first.name, 'พนักงานคนที่ 11');
     expect(employeeController.employees.last.name, 'พนักงานคนที่ 20');
     expect(find.text('แสดง 11 - 20 จาก 25 รายการ (หน้า 2 จาก 3)'), findsOneWidget);
 
-    // Tap page 3 (Last page with 5 items)
+    // กดเลือกหน้าที่ 3 (หน้าสุดท้ายมี 5 รายการ)
     await tester.tap(find.text('3'));
     await tester.pumpAndSettle();
 

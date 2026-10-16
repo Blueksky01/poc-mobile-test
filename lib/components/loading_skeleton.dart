@@ -27,7 +27,7 @@ class LoadingSkeleton extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Skeleton Circle Avatar
+                // โครงร่างแบบ Skeleton สำหรับรูป Avatar วงกลม
                 Container(
                   width: 48,
                   height: 48,
@@ -38,7 +38,7 @@ class LoadingSkeleton extends StatelessWidget {
                 ),
                 const SizedBox(width: 14),
 
-                // Skeleton Lines
+                // โครงร่างแบบ Skeleton สำหรับข้อความ
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

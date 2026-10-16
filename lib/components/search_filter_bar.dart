@@ -53,7 +53,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Search input box
+          // ช่องค้นหาข้อความ
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
@@ -84,7 +84,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           ),
           const SizedBox(height: 8),
 
-          // Horizontal department chips
+          // ตัวเลือกแผนกแนวนอน (Horizontal chips)
           if (widget.departments.isNotEmpty)
             SizedBox(
               height: 38,

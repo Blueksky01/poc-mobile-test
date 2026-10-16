@@ -33,17 +33,17 @@ class EmployeeCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Avatar with Thai name initial
+              // Avatar แสดงอักษรย่อภาษาไทยของชื่อพนักงาน
               EmployeeAvatar(employee: employee, radius: 24),
               const SizedBox(width: 14),
 
-              // Content details
+              // ข้อมูลรายละเอียดพนักงาน
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Row 1: Name and Status Badge
+                    // แถวที่ 1: ชื่อพนักงานและป้ายสถานะ
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -65,7 +65,7 @@ class EmployeeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
 
-                    // Row 2: Employee ID & Department
+                    // แถวที่ 2: รหัสพนักงานและแผนก
                     Row(
                       children: [
                         Container(
@@ -100,7 +100,7 @@ class EmployeeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // Row 3: Email
+                    // แถวที่ 3: อีเมล
                     Row(
                       children: [
                         Icon(Icons.email_outlined, size: 14, color: Colors.grey.shade500),
@@ -120,7 +120,7 @@ class EmployeeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
 
-                    // Row 4: Address
+                    // แถวที่ 4: ที่อยู่
                     Row(
                       children: [
                         Icon(Icons.location_on_outlined, size: 14, color: Colors.grey.shade500),

@@ -14,7 +14,7 @@ class EmployeeServiceException implements Exception {
 }
 
 class EmployeeService {
-  /// Base URL loaded from environment variables
+  /// Base URL ที่โหลดมาจากตัวแปรสภาพแวดล้อม (Environment Variables)
   static String get defaultBaseUrl => AppConfig.baseUrl;
 
   final String baseUrl;
@@ -24,7 +24,7 @@ class EmployeeService {
       : baseUrl = baseUrl ?? defaultBaseUrl,
         _client = client ?? http.Client();
 
-  /// Fetch all employees from backend API (/employees)
+  /// ดึงข้อมูลพนักงานทั้งหมดจาก Backend API (/employees)
   Future<List<EmployeeModel>> fetchEmployees({String? search, String? department, String? status}) async {
     final queryParameters = <String, String>{};
     if (search != null && search.isNotEmpty) queryParameters['search'] = search;
@@ -53,7 +53,7 @@ class EmployeeService {
       if (response.statusCode == 200) {
         final decoded = json.decode(utf8.decode(response.bodyBytes));
 
-        // Handle both raw Array [ ... ] or Paginated Wrapper { data: [ ... ] }
+        // รองรับทั้งข้อมูลแบบ Array ตรงๆ [ ... ] หรือแบบห่อหุ้ม { data: [ ... ] }
         final List<dynamic> list;
         if (decoded is List) {
           list = decoded;

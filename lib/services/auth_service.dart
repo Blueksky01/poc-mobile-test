@@ -14,7 +14,7 @@ class AuthException implements Exception {
 }
 
 class AuthService {
-  /// Default backend URL loaded from environment variables
+  /// URL เริ่มต้นของ Backend ที่โหลดมาจากตัวแปรสภาพแวดล้อม (Environment Variables)
   static String get defaultBaseUrl => AppConfig.baseUrl;
 
   final String baseUrl;
@@ -24,7 +24,7 @@ class AuthService {
       : baseUrl = baseUrl ?? defaultBaseUrl,
         _client = client ?? http.Client();
 
-  /// Admin login API call (POST /auth/login)
+  /// เรียก API เข้าสู่ระบบของผู้ดูแลระบบ (POST /auth/login)
   Future<LoginResponse> login({
     required String username,
     required String password,
@@ -63,7 +63,7 @@ class AuthService {
         throw AuthException('รูปแบบข้อมูลตอบกลับไม่ถูกต้อง');
       }
 
-      // Backend returns { statusCode, message, error }
+      // ข้อมูลที่ Backend ส่งกลับมาในรูปแบบ { statusCode, message, error }
       String errorMessage = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
       if (decoded is Map<String, dynamic>) {
         final message = decoded['message'];
@@ -80,7 +80,7 @@ class AuthService {
     } on FormatException {
       throw AuthException('ไม่สามารถแปลงข้อมูลตอบกลับจากเซิร์ฟเวอร์ได้');
     } catch (e) {
-      // Check for network errors
+      // ตรวจสอบข้อผิดพลาดทางเครือข่าย (Network Error)
       final errString = e.toString().toLowerCase();
       if (errString.contains('socketexception') ||
           errString.contains('connection refused') ||

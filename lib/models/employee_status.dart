@@ -11,7 +11,7 @@ enum EmployeeStatus {
 
   const EmployeeStatus(this.rawValue, this.thaiLabel);
 
-  /// Safe deserialization from String with case-insensitive matching
+  /// แปลง String เป็น EmployeeStatus อย่างปลอดภัย โดยไม่สนใจตัวพิมพ์เล็ก-ใหญ่ (case-insensitive)
   factory EmployeeStatus.fromString(String? value) {
     if (value == null) return EmployeeStatus.unknown;
     final normalized = value.trim().toLowerCase();
@@ -29,35 +29,35 @@ enum EmployeeStatus {
     }
   }
 
-  /// Badge primary text color
+  /// สีข้อความหลักของป้ายสถานะ (Badge)
   Color get textColor {
     switch (this) {
       case EmployeeStatus.active:
-        return const Color(0xFF2E7D32); // Dark Green
+        return const Color(0xFF2E7D32); // สีเขียวเข้ม
       case EmployeeStatus.inactive:
-        return const Color(0xFFC62828); // Dark Red
+        return const Color(0xFFC62828); // สีแดงเข้ม
       case EmployeeStatus.onLeave:
-        return const Color(0xFFE65100); // Dark Orange
+        return const Color(0xFFE65100); // สีส้มเข้ม
       case EmployeeStatus.unknown:
-        return const Color(0xFF616161); // Grey
+        return const Color(0xFF616161); // สีเทา
     }
   }
 
-  /// Badge background pastel tint
+  /// สีพื้นหลังโทนพาสเทลของป้ายสถานะ (Badge)
   Color get backgroundColor {
     switch (this) {
       case EmployeeStatus.active:
-        return const Color(0xFFE8F5E9); // Light Green
+        return const Color(0xFFE8F5E9); // สีเขียวอ่อน
       case EmployeeStatus.inactive:
-        return const Color(0xFFFFEBEE); // Light Red
+        return const Color(0xFFFFEBEE); // สีแดงอ่อน
       case EmployeeStatus.onLeave:
-        return const Color(0xFFFFF3E0); // Light Orange
+        return const Color(0xFFFFF3E0); // สีส้มอ่อน
       case EmployeeStatus.unknown:
-        return const Color(0xFFF5F5F5); // Light Grey
+        return const Color(0xFFF5F5F5); // สีเทาอ่อน
     }
   }
 
-  /// Badge border line color
+  /// สีกรอบของป้ายสถานะ (Badge)
   Color get borderColor {
     switch (this) {
       case EmployeeStatus.active:

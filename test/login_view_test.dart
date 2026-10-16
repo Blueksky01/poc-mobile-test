@@ -107,7 +107,7 @@ void main() {
   });
 
   testWidgets('Direct access to RenderListView redirects to LoginView when unauthenticated', (WidgetTester tester) async {
-    final authController = AuthController(); // Not authenticated
+    final authController = AuthController(); // ยังไม่ได้เข้าสู่ระบบ
 
     await tester.pumpWidget(createTestApp(
       authController: authController,
@@ -115,7 +115,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // Verify redirected back to LoginView
+    // ตรวจสอบว่าถูกเปลี่ยนเส้นทางกลับไปยัง LoginView
     expect(find.byType(LoginView), findsOneWidget);
     expect(find.text('Login Render List'), findsOneWidget);
   });
@@ -142,7 +142,7 @@ void main() {
       authService: AuthService(baseUrl: 'http://localhost:3000', client: mockClient),
     );
 
-    // Login first
+    // เข้าสู่ระบบก่อน
     await authController.login('admin', 'admin1234');
 
     await tester.pumpWidget(createTestApp(
@@ -153,11 +153,11 @@ void main() {
 
     expect(find.byType(RenderListView), findsOneWidget);
 
-    // Tap logout icon
+    // กดไอคอนออกจากระบบ
     await tester.tap(find.byIcon(Icons.logout));
     await tester.pumpAndSettle();
 
-    // Verify logged out and redirected to LoginView
+    // ตรวจสอบว่าออกจากระบบแล้วและเปลี่ยนเส้นทางกลับไปยัง LoginView
     expect(authController.isAuthenticated, false);
     expect(find.byType(LoginView), findsOneWidget);
   });

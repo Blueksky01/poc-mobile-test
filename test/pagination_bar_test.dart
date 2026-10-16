@@ -25,27 +25,27 @@ void main() {
       ),
     );
 
-    // Should render item summary
+    // ควรแสดงข้อความสรุปรายการ
     expect(find.text('แสดง 11 - 20 จาก 48 รายการ (หน้า 2 จาก 5)'), findsOneWidget);
 
-    // Should render pages 1, 2, 3, 4, 5
+    // ควรแสดงปุ่มหน้า 1, 2, 3, 4, 5
     expect(find.text('1'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
     expect(find.text('3'), findsOneWidget);
     expect(find.text('4'), findsOneWidget);
     expect(find.text('5'), findsOneWidget);
 
-    // Tap page 3
+    // กดเลือกหน้าที่ 3
     await tester.tap(find.text('3'));
     await tester.pump();
     expect(selectedPage, 3);
 
-    // Tap previous
+    // กดปุ่มย้อนกลับ
     await tester.tap(find.byIcon(Icons.chevron_left_rounded));
     await tester.pump();
     expect(previousTapped, true);
 
-    // Tap next
+    // กดปุ่มถัดไป
     await tester.tap(find.byIcon(Icons.chevron_right_rounded));
     await tester.pump();
     expect(nextTapped, true);
@@ -69,17 +69,17 @@ void main() {
       ),
     );
 
-    // Ellipsis should be visible
+    // ควรแสดงจุดไข่ปลา (...)
     expect(find.text('...'), findsOneWidget);
 
-    // Tap ellipsis to open dialog
+    // กดจุดไข่ปลาเพื่อเปิด Dialog ไปยังหน้าที่ต้องการ
     await tester.tap(find.text('...'));
     await tester.pumpAndSettle();
 
     expect(find.text('ไปยังหน้า'), findsOneWidget);
     expect(find.text('ระบุหมายเลขหน้าระหว่าง 1 ถึง 10'), findsOneWidget);
 
-    // Enter page 7 and confirm
+    // กรอกหมายเลขหน้า 7 แล้วกดยืนยัน
     await tester.enterText(find.byType(TextField), '7');
     await tester.tap(find.text('ตกลง'));
     await tester.pumpAndSettle();

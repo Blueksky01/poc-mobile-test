@@ -46,11 +46,11 @@ class PaginationBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Row of page buttons and navigation
+            // แถวปุ่มเปลี่ยนหน้าและปุ่มนำทาง
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Previous button
+                // ปุ่มย้อนกลับ (หน้าก่อนหน้า)
                 _buildNavButton(
                   icon: Icons.chevron_left_rounded,
                   tooltip: 'หน้าก่อนหน้า',
@@ -59,11 +59,11 @@ class PaginationBar extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
 
-                // Page Number Buttons
+                // ปุ่มหมายเลขหน้า
                 ..._buildPageNumbers(context),
 
                 const SizedBox(width: 8),
-                // Next button
+                // ปุ่มถัดไป (หน้าถัดไป)
                 _buildNavButton(
                   icon: Icons.chevron_right_rounded,
                   tooltip: 'หน้าถัดไป',
@@ -74,7 +74,7 @@ class PaginationBar extends StatelessWidget {
             ),
             const SizedBox(height: 6),
 
-            // Item summary text
+            // ข้อความสรุปจำนวนรายการ
             Text(
               'แสดง $startIndex - $endIndex จาก $totalItems รายการ (หน้า $currentPage จาก $totalPages)',
               style: TextStyle(
@@ -131,7 +131,7 @@ class PaginationBar extends StatelessWidget {
       return widgets;
     }
 
-    // When totalPages > 5
+    // กรณีจำนวนหน้าทั้งหมดมากกว่า 5 หน้า
     List<int> pages;
     bool showLeftDots = false;
     bool showRightDots = false;

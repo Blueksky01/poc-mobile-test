@@ -18,7 +18,7 @@ Future<void> main() async {
     // [DI = Provider] ฉีด Service และ Controller ให้ทั้งแอปผ่าน MultiProvider
     MultiProvider(
       providers: [
-        // Auth Dependencies
+        // Dependencies สำหรับระบบยืนยันตัวตน (Auth)
         Provider<AuthService>(
           create: (_) => AuthService(),
         ),
@@ -28,7 +28,7 @@ Future<void> main() async {
           ),
         ),
 
-        // Employee Dependencies (MVC)
+        // Dependencies สำหรับจัดการข้อมูลพนักงาน (Employee) ตามโครงสร้าง MVC
         Provider<EmployeeService>(
           create: (_) => EmployeeService(),
         ),

@@ -8,7 +8,7 @@ class EmployeeController extends ChangeNotifier {
 
   EmployeeController({required this.employeeService});
 
-  // Internal states
+  // สถานะภายใน (Internal states)
   List<EmployeeModel> _allEmployees = [];
   List<EmployeeModel> _filteredEmployees = [];
   bool _isLoading = false;
@@ -18,11 +18,11 @@ class EmployeeController extends ChangeNotifier {
   String _selectedDepartment = 'All';
   EmployeeStatus? _selectedStatus;
 
-  // Pagination states (10 items per page)
+  // สถานะการแบ่งหน้า (10 รายการต่อหน้า)
   int _currentPage = 1;
   static const int _pageSize = 10;
 
-  // Public getters
+  // Getter สำหรับภายนอกเรียกใช้งาน
   List<EmployeeModel> get employees => paginatedEmployees;
   List<EmployeeModel> get filteredEmployees => _filteredEmployees;
   List<EmployeeModel> get allEmployees => _allEmployees;
@@ -34,7 +34,7 @@ class EmployeeController extends ChangeNotifier {
   String get selectedDepartment => _selectedDepartment;
   EmployeeStatus? get selectedStatus => _selectedStatus;
 
-  // Pagination getters
+  // Getter สำหรับระบบแบ่งหน้า (Pagination)
   int get currentPage => _currentPage;
   int get pageSize => _pageSize;
   int get totalPages => _filteredEmployees.isEmpty ? 1 : (_filteredEmployees.length / _pageSize).ceil();
@@ -48,7 +48,7 @@ class EmployeeController extends ChangeNotifier {
     return end > _filteredEmployees.length ? _filteredEmployees.length : end;
   }
 
-  /// Paginated items for the current page (10 items per page)
+  /// รายการพนักงานในหน้าปัจจุบันตามการแบ่งหน้า (10 รายการต่อหน้า)
   List<EmployeeModel> get paginatedEmployees {
     if (_filteredEmployees.isEmpty) return [];
     final start = (_currentPage - 1) * _pageSize;
@@ -59,7 +59,7 @@ class EmployeeController extends ChangeNotifier {
     return _filteredEmployees.sublist(start, end);
   }
 
-  /// Dynamic list of all available departments from the fetched data
+  /// รายชื่อแผนกทั้งหมดแบบไดนามิกจากข้อมูลที่ดึงมา
   List<String> get availableDepartments {
     final depts = _allEmployees.map((e) => e.department).toSet().toList()
       ..sort();
@@ -71,7 +71,7 @@ class EmployeeController extends ChangeNotifier {
     if (employee.id.trim().isEmpty) return false;
     if (employee.name.trim().isEmpty || employee.name == 'ไม่ระบุชื่อ') return false;
     
-    // Simple email format check
+    // ตรวจสอบรูปแบบอีเมลเบื้องต้น
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (employee.email != '-' && !emailRegex.hasMatch(employee.email.trim())) {
       return false;
@@ -80,7 +80,7 @@ class EmployeeController extends ChangeNotifier {
     return true;
   }
 
-  /// Fetch employees from backend
+  /// ดึงข้อมูลพนักงานจาก Backend
   Future<void> fetchEmployees() async {
     _isLoading = true;
     _errorMessage = null;
@@ -89,7 +89,7 @@ class EmployeeController extends ChangeNotifier {
     try {
       final list = await employeeService.fetchEmployees();
 
-      // [Validate & Filter Corrupted Data]
+      // [ตรวจสอบและกรองข้อมูลที่ไม่ถูกต้อง]
       // กรองเฉพาะพนักงานที่มีข้อมูลถูกต้องตามกฎ Business Rule
       _allEmployees = list.where(validateEmployee).toList();
       _applyFilters();
@@ -103,7 +103,7 @@ class EmployeeController extends ChangeNotifier {
     }
   }
 
-  /// Update search query and re-filter
+  /// อัปเดตคำค้นหาและประมวลผลตัวกรองใหม่
   void setSearchQuery(String query) {
     _searchQuery = query.trim();
     _currentPage = 1;
@@ -111,7 +111,7 @@ class EmployeeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Update department filter
+  /// อัปเดตตัวกรองแผนก
   void setDepartment(String department) {
     _selectedDepartment = department;
     _currentPage = 1;
@@ -119,7 +119,7 @@ class EmployeeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Update status filter
+  /// อัปเดตตัวกรองสถานะ
   void setStatus(EmployeeStatus? status) {
     _selectedStatus = status;
     _currentPage = 1;
@@ -127,7 +127,7 @@ class EmployeeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clear all search and filter conditions
+  /// ล้างค่าการค้นหาและตัวกรองทั้งหมด
   void clearFilters() {
     _searchQuery = '';
     _selectedDepartment = 'All';
@@ -137,7 +137,7 @@ class EmployeeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Set current active page
+  /// กำหนดหมายเลขหน้าปัจจุบัน
   void setPage(int page) {
     final target = page.clamp(1, totalPages);
     if (_currentPage != target) {
@@ -146,7 +146,7 @@ class EmployeeController extends ChangeNotifier {
     }
   }
 
-  /// Go to next page
+  /// ไปยังหน้าถัดไป
   void nextPage() {
     if (hasNextPage) {
       _currentPage++;
@@ -154,7 +154,7 @@ class EmployeeController extends ChangeNotifier {
     }
   }
 
-  /// Go to previous page
+  /// ไปยังหน้าก่อนหน้า
   void previousPage() {
     if (hasPreviousPage) {
       _currentPage--;
@@ -162,26 +162,26 @@ class EmployeeController extends ChangeNotifier {
     }
   }
 
-  /// Pull-to-refresh
+  /// ดึงลงเพื่อรีเฟรชข้อมูล (Pull-to-refresh)
   Future<void> refresh() async {
     await fetchEmployees();
   }
 
-  /// Internal filter processor
+  /// ประมวลผลการกรองข้อมูลภายใน
   void _applyFilters() {
     _filteredEmployees = _allEmployees.where((employee) {
-      // 1. Department Filter
+      // 1. ตัวกรองแผนก
       if (_selectedDepartment != 'All' &&
           employee.department.toLowerCase() != _selectedDepartment.toLowerCase()) {
         return false;
       }
 
-      // 2. Status Filter
+      // 2. ตัวกรองสถานะ
       if (_selectedStatus != null && employee.status != _selectedStatus) {
         return false;
       }
 
-      // 3. Search Keyword Filter
+      // 3. ตัวกรองคำค้นหา
       if (_searchQuery.isNotEmpty) {
         final query = _searchQuery.toLowerCase();
         final matchId = employee.id.toLowerCase().contains(query);
@@ -204,7 +204,7 @@ class EmployeeController extends ChangeNotifier {
       return true;
     }).toList();
 
-    // Ensure currentPage is within bounds
+    // ตรวจสอบให้แน่ใจว่าหมายเลขหน้าปัจจุบันอยู่ในช่วงที่ถูกต้อง
     if (_currentPage > totalPages) {
       _currentPage = totalPages > 0 ? totalPages : 1;
     }

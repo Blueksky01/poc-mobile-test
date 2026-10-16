@@ -89,7 +89,7 @@ void main() {
           'address': {'street': '2/2', 'subdistrict': 'C', 'district': 'D', 'province': 'เชียงใหม่', 'postalCode': '50000'},
         }),
         EmployeeModel.fromJson({
-          'id': '', // Invalid ID to test validation
+          'id': '', // รหัสพนักงานไม่ถูกต้องสำหรับทดสอบ Validation
           'name': '',
           'email': 'invalid',
           'department': 'HR',
@@ -105,7 +105,7 @@ void main() {
 
       await controller.fetchEmployees();
 
-      expect(controller.totalCount, 2); // 3rd item was invalid and filtered out
+      expect(controller.totalCount, 2); // รายการที่ 3 มีข้อมูลไม่ถูกต้องจึงถูกกรองออก
       expect(controller.employees.length, 2);
       expect(controller.isLoading, false);
       expect(controller.errorMessage, null);
@@ -116,17 +116,17 @@ void main() {
       final controller = EmployeeController(employeeService: mockService);
       await controller.fetchEmployees();
 
-      // Search by name
+      // ค้นหาด้วยชื่อ
       controller.setSearchQuery('วิภาดา');
       expect(controller.filteredCount, 1);
       expect(controller.employees.first.name, 'วิภาดา แสงสว่าง');
 
-      // Search by ID
+      // ค้นหาด้วยรหัสพนักงาน
       controller.setSearchQuery('EMP-001');
       expect(controller.filteredCount, 1);
       expect(controller.employees.first.id, 'EMP-001');
 
-      // Clear search
+      // ล้างการค้นหา
       controller.setSearchQuery('');
       expect(controller.filteredCount, 2);
     });
@@ -165,13 +165,13 @@ void main() {
       final controller = EmployeeController(employeeService: mockService);
       await controller.fetchEmployees();
 
-      // Overall numbers
+      // ตรวจสอบตัวเลขโดยรวม
       expect(controller.totalCount, 25);
       expect(controller.filteredCount, 25);
       expect(controller.totalPages, 3);
       expect(controller.pageSize, 10);
 
-      // Page 1
+      // หน้าที่ 1
       expect(controller.currentPage, 1);
       expect(controller.hasPreviousPage, false);
       expect(controller.hasNextPage, true);
@@ -181,7 +181,7 @@ void main() {
       expect(controller.employees.first.name, 'พนักงานคนที่ 1');
       expect(controller.employees.last.name, 'พนักงานคนที่ 10');
 
-      // Go to Page 2
+      // ไปยังหน้าที่ 2
       controller.nextPage();
       expect(controller.currentPage, 2);
       expect(controller.hasPreviousPage, true);
@@ -192,7 +192,7 @@ void main() {
       expect(controller.employees.first.name, 'พนักงานคนที่ 11');
       expect(controller.employees.last.name, 'พนักงานคนที่ 20');
 
-      // Go to Page 3 (Last page with remaining 5 items)
+      // ไปยังหน้าที่ 3 (หน้าสุดท้ายมี 5 รายการที่เหลือ)
       controller.nextPage();
       expect(controller.currentPage, 3);
       expect(controller.hasPreviousPage, true);
@@ -203,25 +203,25 @@ void main() {
       expect(controller.employees.first.name, 'พนักงานคนที่ 21');
       expect(controller.employees.last.name, 'พนักงานคนที่ 25');
 
-      // Calling nextPage on last page should not exceed totalPages
+      // การเรียก nextPage ที่หน้าสุดท้ายต้องไม่เกินจำนวนหน้าทั้งหมด
       controller.nextPage();
       expect(controller.currentPage, 3);
 
-      // Previous page
+      // ย้อนกลับไปหน้าก่อนหน้า
       controller.previousPage();
       expect(controller.currentPage, 2);
 
-      // Direct setPage
+      // กำหนดหมายเลขหน้าโดยตรงด้วย setPage
       controller.setPage(1);
       expect(controller.currentPage, 1);
 
-      // Clamping checks
+      // ตรวจสอบการจำกัดขอบเขตหมายเลขหน้า (Clamping)
       controller.setPage(999);
       expect(controller.currentPage, 3);
       controller.setPage(-5);
       expect(controller.currentPage, 1);
 
-      // When searching/filtering, page should reset to 1
+      // เมื่อค้นหาหรือกรองข้อมูล หมายเลขหน้าควรถูกรีเซ็ตกลับเป็น 1
       controller.setPage(3);
       expect(controller.currentPage, 3);
       controller.setSearchQuery('พนักงานคนที่ 1');
