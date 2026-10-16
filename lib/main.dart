@@ -53,9 +53,9 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'POC App',
       // [Navigation / Routing = Navigator] กำหนด Named Routes
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/': (context) => const LoginView(),
         '/login': (context) => const LoginView(),
         '/render-list': (context) => const RenderListView(),
       },
@@ -84,40 +84,6 @@ class MainApp extends StatelessWidget {
           bodyLarge: GoogleFonts.sarabun(fontSize: 16),
           bodyMedium: GoogleFonts.sarabun(fontSize: 14),
           bodySmall: GoogleFonts.sarabun(fontSize: 12),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Center(child: Text('My POC App'))),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Welcome to POC App'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // [Navigation / Routing = Navigator]
-                Navigator.pushNamed(context, '/login');
-              },
-              child: const Text('Go to Login'),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/render-list');
-              },
-              child: const Text('Go directly to Employee List'),
-            ),
-          ],
         ),
       ),
     );

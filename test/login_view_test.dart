@@ -19,7 +19,10 @@ class MockEmployeeServiceForLoginTest extends EmployeeService {
   }
 }
 
-Widget createTestApp({AuthController? authController}) {
+Widget createTestApp({
+  AuthController? authController,
+  String initialRoute = '/login',
+}) {
   final controller = authController ?? AuthController();
   final employeeController = EmployeeController(
     employeeService: EmployeeService(client: MockClient((_) async => http.Response('[]', 200))),
@@ -31,8 +34,9 @@ Widget createTestApp({AuthController? authController}) {
       ChangeNotifierProvider<EmployeeController>.value(value: employeeController),
     ],
     child: MaterialApp(
-      initialRoute: '/login',
+      initialRoute: initialRoute,
       routes: {
+        '/': (context) => const LoginView(),
         '/login': (context) => const LoginView(),
         '/render-list': (context) => const RenderListView(),
       },
@@ -100,5 +104,61 @@ void main() {
 
     expect(find.byType(RenderListView), findsOneWidget);
     expect(find.text('รายชื่อพนักงาน'), findsOneWidget);
+  });
+
+  testWidgets('Direct access to RenderListView redirects to LoginView when unauthenticated', (WidgetTester tester) async {
+    final authController = AuthController(); // Not authenticated
+
+    await tester.pumpWidget(createTestApp(
+      authController: authController,
+      initialRoute: '/render-list',
+    ));
+    await tester.pumpAndSettle();
+
+    // Verify redirected back to LoginView
+    expect(find.byType(LoginView), findsOneWidget);
+    expect(find.text('Login Render List'), findsOneWidget);
+  });
+
+  testWidgets('Logout from RenderListView redirects back to LoginView', (WidgetTester tester) async {
+    final mockClient = MockClient((request) async {
+      return http.Response(
+        json.encode({
+          'accessToken': 'dummy-access',
+          'refreshToken': 'dummy-refresh',
+          'admin': {
+            'id': 1,
+            'username': 'admin',
+            'name': 'ผู้ดูแลระบบ (Admin)',
+            'role': 'admin',
+          },
+        }),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
+
+    final authController = AuthController(
+      authService: AuthService(baseUrl: 'http://localhost:3000', client: mockClient),
+    );
+
+    // Login first
+    await authController.login('admin', 'admin1234');
+
+    await tester.pumpWidget(createTestApp(
+      authController: authController,
+      initialRoute: '/render-list',
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RenderListView), findsOneWidget);
+
+    // Tap logout icon
+    await tester.tap(find.byIcon(Icons.logout));
+    await tester.pumpAndSettle();
+
+    // Verify logged out and redirected to LoginView
+    expect(authController.isAuthenticated, false);
+    expect(find.byType(LoginView), findsOneWidget);
   });
 }

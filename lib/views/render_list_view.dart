@@ -21,8 +21,15 @@ class _RenderListViewState extends State<RenderListView> {
   @override
   void initState() {
     super.initState();
-    // โหลดข้อมูลอัตโนมัติเมื่อเปิดหน้าจอ
+    // ตรวจสอบสิทธิ์การเข้าใช้งาน: ต้อง Login ก่อนเข้าถึงหน้านี้
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final authController = context.read<AuthController>();
+      if (!authController.isAuthenticated) {
+        Navigator.pushReplacementNamed(context, '/login');
+        return;
+      }
+
       final controller = context.read<EmployeeController>();
       if (controller.employees.isEmpty && !controller.isLoading) {
         controller.fetchEmployees();
@@ -35,6 +42,15 @@ class _RenderListViewState extends State<RenderListView> {
     final authController = context.watch<AuthController>();
     final admin = authController.currentAdmin;
     final employeeController = context.watch<EmployeeController>();
+
+    // หากยังไม่ Login ให้แสดงสถานะโหลดเพื่อรอการเปลี่ยนเส้นทางกลับหน้า Login
+    if (!authController.isAuthenticated) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
