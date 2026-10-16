@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../config/app_config.dart';
 import '../models/admin_model.dart';
 
 class AuthException implements Exception {
@@ -15,18 +14,8 @@ class AuthException implements Exception {
 }
 
 class AuthService {
-  /// Default backend URL depending on the runtime platform
-  static String get defaultBaseUrl {
-    if (kIsWeb) {
-      return 'http://localhost:3000';
-    }
-    // Android emulator cannot access host machine via localhost/127.0.0.1
-    // 10.0.2.2 is the special alias to host loopback interface
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:3000';
-    }
-    return 'http://localhost:3000';
-  }
+  /// Default backend URL loaded from environment variables
+  static String get defaultBaseUrl => AppConfig.baseUrl;
 
   final String baseUrl;
   final http.Client _client;

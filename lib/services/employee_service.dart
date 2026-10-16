@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../config/app_config.dart';
 import '../models/employee_model.dart';
 
 class EmployeeServiceException implements Exception {
@@ -15,16 +14,8 @@ class EmployeeServiceException implements Exception {
 }
 
 class EmployeeService {
-  /// Base URL matching host platform
-  static String get defaultBaseUrl {
-    if (kIsWeb) {
-      return 'http://localhost:3000';
-    }
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:3000';
-    }
-    return 'http://localhost:3000';
-  }
+  /// Base URL loaded from environment variables
+  static String get defaultBaseUrl => AppConfig.baseUrl;
 
   final String baseUrl;
   final http.Client _client;

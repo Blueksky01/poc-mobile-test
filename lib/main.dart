@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'config/app_config.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/employee_controller.dart';
 import 'services/auth_service.dart';
@@ -9,7 +10,10 @@ import 'services/employee_service.dart';
 import 'views/login_view.dart';
 import 'views/render_list_view.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppConfig.initialize();
+
   runApp(
     // [DI = Provider] ฉีด Service และ Controller ให้ทั้งแอปผ่าน MultiProvider
     MultiProvider(
