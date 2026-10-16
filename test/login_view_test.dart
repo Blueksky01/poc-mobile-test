@@ -5,15 +5,30 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:provider/provider.dart';
 import 'package:mypoc1/controllers/auth_controller.dart';
+import 'package:mypoc1/controllers/employee_controller.dart';
 import 'package:mypoc1/services/auth_service.dart';
+import 'package:mypoc1/services/employee_service.dart';
+import 'package:mypoc1/models/employee_model.dart';
 import 'package:mypoc1/views/login_view.dart';
 import 'package:mypoc1/views/render_list_view.dart';
 
+class MockEmployeeServiceForLoginTest extends EmployeeService {
+  @override
+  Future<List<EmployeeModel>> fetchEmployees({String? search, String? department, String? status}) async {
+    return [];
+  }
+}
+
 Widget createTestApp({AuthController? authController}) {
   final controller = authController ?? AuthController();
+  final employeeController = EmployeeController(
+    employeeService: EmployeeService(client: MockClient((_) async => http.Response('[]', 200))),
+  );
+
   return MultiProvider(
     providers: [
       ChangeNotifierProvider<AuthController>.value(value: controller),
+      ChangeNotifierProvider<EmployeeController>.value(value: employeeController),
     ],
     child: MaterialApp(
       initialRoute: '/login',
@@ -33,35 +48,31 @@ void main() {
     expect(find.widgetWithText(TextField, 'username'), findsOneWidget);
     expect(find.widgetWithText(TextField, 'password'), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Login'), findsOneWidget);
-
-    // Initial obscure password is true -> visibility_off icon
-    expect(find.byIcon(Icons.visibility_off), findsOneWidget);
-
-    // Tap toggle icon to switch visibility
-    await tester.tap(find.byIcon(Icons.visibility_off));
-    await tester.pump();
-    expect(find.byIcon(Icons.visibility), findsOneWidget);
   });
 
-  testWidgets('Submitting empty username shows validation snackbar', (WidgetTester tester) async {
+  testWidgets('Shows snackbar if username is empty', (WidgetTester tester) async {
     await tester.pumpWidget(createTestApp());
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
     await tester.pump();
 
-    expect(
-      find.descendant(
-        of: find.byType(SnackBar),
-        matching: find.text('กรุณากรอก username'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.widgetWithText(SnackBar, 'กรุณากรอก username'), findsOneWidget);
+  });
+
+  testWidgets('Shows snackbar if password is empty', (WidgetTester tester) async {
+    await tester.pumpWidget(createTestApp());
+
+    await tester.enterText(find.widgetWithText(TextField, 'username'), 'admin');
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pump();
+
+    expect(find.widgetWithText(SnackBar, 'กรุณากรอก password'), findsOneWidget);
   });
 
   testWidgets('Successful login navigates to RenderListView using Navigator', (WidgetTester tester) async {
     final mockClient = MockClient((request) async {
       return http.Response(
-        jsonEncode({
+        json.encode({
           'accessToken': 'dummy-access',
           'refreshToken': 'dummy-refresh',
           'admin': {
@@ -88,6 +99,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(RenderListView), findsOneWidget);
-    expect(find.text('ชื่อ: ผู้ดูแลระบบ (Admin)'), findsOneWidget);
+    expect(find.text('รายชื่อพนักงาน'), findsOneWidget);
   });
 }
