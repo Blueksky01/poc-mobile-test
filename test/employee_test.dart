@@ -147,5 +147,86 @@ void main() {
       controller.setDepartment('All');
       expect(controller.filteredCount, 2);
     });
+
+    test('Controller should paginate items with 10 items per page', () async {
+      final manyEmployees = List.generate(
+        25,
+        (i) => EmployeeModel.fromJson({
+          'id': 'EMP-${1000 + i}',
+          'name': 'พนักงานคนที่ ${i + 1}',
+          'email': 'emp$i@example.com',
+          'department': i % 2 == 0 ? 'Engineering' : 'Finance',
+          'status': 'Active',
+          'address': {'street': '1/1', 'subdistrict': 'A', 'district': 'B', 'province': 'กทม', 'postalCode': '10110'},
+        }),
+      );
+
+      final mockService = MockEmployeeService(manyEmployees);
+      final controller = EmployeeController(employeeService: mockService);
+      await controller.fetchEmployees();
+
+      // Overall numbers
+      expect(controller.totalCount, 25);
+      expect(controller.filteredCount, 25);
+      expect(controller.totalPages, 3);
+      expect(controller.pageSize, 10);
+
+      // Page 1
+      expect(controller.currentPage, 1);
+      expect(controller.hasPreviousPage, false);
+      expect(controller.hasNextPage, true);
+      expect(controller.startIndex, 1);
+      expect(controller.endIndex, 10);
+      expect(controller.employees.length, 10);
+      expect(controller.employees.first.name, 'พนักงานคนที่ 1');
+      expect(controller.employees.last.name, 'พนักงานคนที่ 10');
+
+      // Go to Page 2
+      controller.nextPage();
+      expect(controller.currentPage, 2);
+      expect(controller.hasPreviousPage, true);
+      expect(controller.hasNextPage, true);
+      expect(controller.startIndex, 11);
+      expect(controller.endIndex, 20);
+      expect(controller.employees.length, 10);
+      expect(controller.employees.first.name, 'พนักงานคนที่ 11');
+      expect(controller.employees.last.name, 'พนักงานคนที่ 20');
+
+      // Go to Page 3 (Last page with remaining 5 items)
+      controller.nextPage();
+      expect(controller.currentPage, 3);
+      expect(controller.hasPreviousPage, true);
+      expect(controller.hasNextPage, false);
+      expect(controller.startIndex, 21);
+      expect(controller.endIndex, 25);
+      expect(controller.employees.length, 5);
+      expect(controller.employees.first.name, 'พนักงานคนที่ 21');
+      expect(controller.employees.last.name, 'พนักงานคนที่ 25');
+
+      // Calling nextPage on last page should not exceed totalPages
+      controller.nextPage();
+      expect(controller.currentPage, 3);
+
+      // Previous page
+      controller.previousPage();
+      expect(controller.currentPage, 2);
+
+      // Direct setPage
+      controller.setPage(1);
+      expect(controller.currentPage, 1);
+
+      // Clamping checks
+      controller.setPage(999);
+      expect(controller.currentPage, 3);
+      controller.setPage(-5);
+      expect(controller.currentPage, 1);
+
+      // When searching/filtering, page should reset to 1
+      controller.setPage(3);
+      expect(controller.currentPage, 3);
+      controller.setSearchQuery('พนักงานคนที่ 1');
+      expect(controller.currentPage, 1);
+    });
   });
 }
+

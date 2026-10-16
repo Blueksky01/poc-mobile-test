@@ -18,8 +18,14 @@ class EmployeeController extends ChangeNotifier {
   String _selectedDepartment = 'All';
   EmployeeStatus? _selectedStatus;
 
+  // Pagination states (10 items per page)
+  int _currentPage = 1;
+  static const int _pageSize = 10;
+
   // Public getters
-  List<EmployeeModel> get employees => _filteredEmployees;
+  List<EmployeeModel> get employees => paginatedEmployees;
+  List<EmployeeModel> get filteredEmployees => _filteredEmployees;
+  List<EmployeeModel> get allEmployees => _allEmployees;
   int get totalCount => _allEmployees.length;
   int get filteredCount => _filteredEmployees.length;
   bool get isLoading => _isLoading;
@@ -27,6 +33,31 @@ class EmployeeController extends ChangeNotifier {
   String get searchQuery => _searchQuery;
   String get selectedDepartment => _selectedDepartment;
   EmployeeStatus? get selectedStatus => _selectedStatus;
+
+  // Pagination getters
+  int get currentPage => _currentPage;
+  int get pageSize => _pageSize;
+  int get totalPages => _filteredEmployees.isEmpty ? 1 : (_filteredEmployees.length / _pageSize).ceil();
+  bool get hasPreviousPage => _currentPage > 1;
+  bool get hasNextPage => _currentPage < totalPages;
+
+  int get startIndex => _filteredEmployees.isEmpty ? 0 : (_currentPage - 1) * _pageSize + 1;
+  int get endIndex {
+    if (_filteredEmployees.isEmpty) return 0;
+    final end = _currentPage * _pageSize;
+    return end > _filteredEmployees.length ? _filteredEmployees.length : end;
+  }
+
+  /// Paginated items for the current page (10 items per page)
+  List<EmployeeModel> get paginatedEmployees {
+    if (_filteredEmployees.isEmpty) return [];
+    final start = (_currentPage - 1) * _pageSize;
+    if (start >= _filteredEmployees.length) return [];
+    final end = (start + _pageSize > _filteredEmployees.length)
+        ? _filteredEmployees.length
+        : start + _pageSize;
+    return _filteredEmployees.sublist(start, end);
+  }
 
   /// Dynamic list of all available departments from the fetched data
   List<String> get availableDepartments {
@@ -75,6 +106,7 @@ class EmployeeController extends ChangeNotifier {
   /// Update search query and re-filter
   void setSearchQuery(String query) {
     _searchQuery = query.trim();
+    _currentPage = 1;
     _applyFilters();
     notifyListeners();
   }
@@ -82,6 +114,7 @@ class EmployeeController extends ChangeNotifier {
   /// Update department filter
   void setDepartment(String department) {
     _selectedDepartment = department;
+    _currentPage = 1;
     _applyFilters();
     notifyListeners();
   }
@@ -89,6 +122,7 @@ class EmployeeController extends ChangeNotifier {
   /// Update status filter
   void setStatus(EmployeeStatus? status) {
     _selectedStatus = status;
+    _currentPage = 1;
     _applyFilters();
     notifyListeners();
   }
@@ -98,8 +132,34 @@ class EmployeeController extends ChangeNotifier {
     _searchQuery = '';
     _selectedDepartment = 'All';
     _selectedStatus = null;
+    _currentPage = 1;
     _applyFilters();
     notifyListeners();
+  }
+
+  /// Set current active page
+  void setPage(int page) {
+    final target = page.clamp(1, totalPages);
+    if (_currentPage != target) {
+      _currentPage = target;
+      notifyListeners();
+    }
+  }
+
+  /// Go to next page
+  void nextPage() {
+    if (hasNextPage) {
+      _currentPage++;
+      notifyListeners();
+    }
+  }
+
+  /// Go to previous page
+  void previousPage() {
+    if (hasPreviousPage) {
+      _currentPage--;
+      notifyListeners();
+    }
   }
 
   /// Pull-to-refresh
@@ -143,5 +203,10 @@ class EmployeeController extends ChangeNotifier {
 
       return true;
     }).toList();
+
+    // Ensure currentPage is within bounds
+    if (_currentPage > totalPages) {
+      _currentPage = totalPages > 0 ? totalPages : 1;
+    }
   }
 }

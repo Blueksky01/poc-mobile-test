@@ -5,6 +5,7 @@ import '../components/empty_state_view.dart';
 import '../components/error_state_view.dart';
 import '../components/employee_card.dart';
 import '../components/loading_skeleton.dart';
+import '../components/pagination_bar.dart';
 import '../components/search_filter_bar.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/employee_controller.dart';
@@ -18,9 +19,12 @@ class RenderListView extends StatefulWidget {
 }
 
 class _RenderListViewState extends State<RenderListView> {
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     // ตรวจสอบสิทธิ์การเข้าใช้งาน: ต้อง Login ก่อนเข้าถึงหน้านี้
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -35,6 +39,22 @@ class _RenderListViewState extends State<RenderListView> {
         controller.fetchEmployees();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -118,6 +138,30 @@ class _RenderListViewState extends State<RenderListView> {
           Expanded(
             child: _buildBody(context, employeeController),
           ),
+
+          // ส่วนควบคุมการแบ่งหน้า (Pagination Controls: แบ่งทีละ 10 รายการต่อหน้า)
+          if (!employeeController.isLoading &&
+              employeeController.errorMessage == null &&
+              employeeController.filteredEmployees.isNotEmpty)
+            PaginationBar(
+              currentPage: employeeController.currentPage,
+              totalPages: employeeController.totalPages,
+              totalItems: employeeController.filteredCount,
+              startIndex: employeeController.startIndex,
+              endIndex: employeeController.endIndex,
+              onPageChanged: (page) {
+                employeeController.setPage(page);
+                _scrollToTop();
+              },
+              onPrevious: () {
+                employeeController.previousPage();
+                _scrollToTop();
+              },
+              onNext: () {
+                employeeController.nextPage();
+                _scrollToTop();
+              },
+            ),
         ],
       ),
     );
@@ -138,7 +182,7 @@ class _RenderListViewState extends State<RenderListView> {
     }
 
     // 3. สถานะ Empty: ค้นหาหรือกรองแล้วไม่พบข้อมูล
-    if (controller.employees.isEmpty) {
+    if (controller.filteredCount == 0) {
       return EmptyStateView(
         onClearFilter: () => controller.clearFilters(),
       );
@@ -148,6 +192,7 @@ class _RenderListViewState extends State<RenderListView> {
     return RefreshIndicator(
       onRefresh: () => controller.refresh(),
       child: ListView.builder(
+        controller: _scrollController,
         padding: const EdgeInsets.symmetric(vertical: 8),
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: controller.employees.length,
