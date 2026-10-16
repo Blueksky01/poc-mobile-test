@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:mypoc1/views/login_view.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import 'controllers/auth_controller.dart';
+import 'services/auth_service.dart';
+import 'views/login_view.dart';
+import 'views/render_list_view.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    // [DI = Provider] ฉีด Service และ Controller ให้ทั้งแอปผ่าน MultiProvider
+    MultiProvider(
+      providers: [
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
+        ChangeNotifierProvider<AuthController>(
+          create: (context) => AuthController(
+            authService: context.read<AuthService>(),
+          ),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -14,12 +34,17 @@ class MainApp extends StatelessWidget {
     final baseTextTheme = ThemeData.light().textTheme;
 
     return MaterialApp(
+      title: 'POC App',
+      // [Navigation / Routing = Navigator] กำหนด Named Routes
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/login': (context) => const LoginView(),
+        '/render-list': (context) => const RenderListView(),
+      },
       theme: ThemeData(
-        // Font หลัก: Sarabun
         fontFamily: GoogleFonts.sarabun().fontFamily,
-
         textTheme: baseTextTheme.copyWith(
-          // Title และหัวข้อ ใช้ Google Sans Flex
           headlineLarge: GoogleFonts.googleSansFlex(
             fontSize: 32,
             fontWeight: FontWeight.w600,
@@ -32,15 +57,11 @@ class MainApp extends StatelessWidget {
             fontSize: 22,
             fontWeight: FontWeight.w600,
           ),
-
-          // รายละเอียดและข้อความทั่วไป ใช้ Sarabun
           bodyLarge: GoogleFonts.sarabun(fontSize: 16),
           bodyMedium: GoogleFonts.sarabun(fontSize: 14),
           bodySmall: GoogleFonts.sarabun(fontSize: 12),
         ),
       ),
-
-      home: HomeScreen(),
     );
   }
 }
@@ -60,10 +81,8 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context, // ตอนนี้ context อยู่ใต้ MaterialApp แล้ว จะทำงานได้ถูกต้อง
-                  MaterialPageRoute(builder: (context) => const LoginView()),
-                );
+                // [Navigation / Routing = Navigator]
+                Navigator.pushNamed(context, '/login');
               },
               child: const Text('Go to Login'),
             ),

@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^9.0.0
+  http: ^1.6.0
   navigator: ^1.1.1
   provider: ^6.1.5+1
 
